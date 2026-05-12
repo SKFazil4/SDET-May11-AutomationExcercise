@@ -1,4 +1,5 @@
 Feature: Login Page
+  @task1
   Scenario: Register User
     #Home Page
     Given Browser launch
@@ -13,22 +14,24 @@ Feature: Login Page
     #SignUp Page
     Then Verify "ENTER ACCOUNT INFORMATION" is visible in "signup_page"
     Given Check on title whose value "Mr"
-    Given Fill "Fazil@123" in the element id "password"
-    Given Select from select id "days" with option value "11"
-    Given Select from select id "months" with option value "December"
-    Given Select from select id "years" with option value "2002"
+    Given Fill the following fields
+    |first_name| Gime|
+    |last_name|Doe|
+    |password|Fazil@123|
+    |company|Sutherland|
+    |address1|Manikonda|
+    |address2|Lanco Hills|
+    |state|Telangana|
+    |city|Hyderabad|
+    |zipcode|500032|
+    |mobile_number|9876543210|
     Given Checkbox with checkbox id "newsletter"
     Given Checkbox with checkbox id "optin"
-    Given Fill "Fazil" in the element id "first_name"
-    Given Fill "Shaik" in the element id "last_name"
-    Given Fill "Sutherland" in the element id "company"
-    Given Fill "Manikonda" in the element id "address1"
-    Given Fill "Lanco Hills" in the element id "address2"
-    Given Select from select id "country" with option value "India"
-    Given Fill "Telangana" in the element id "state"
-    Given Fill "Hyderabad" in the element id "city"
-    Given Fill "500032" in the element id "zipcode"
-    Given Fill "9876543210" in the element id "mobile_number"
+    Given Select the following fields
+    |days|11|
+    |months|December|
+    |years|2002|
+    |country|India|
     When Click on "Create Account" button in "signup_page"
     #Home Page
     Then Verify "ACCOUNT CREATED!" is visible in "home_page"
@@ -38,6 +41,7 @@ Feature: Login Page
     Then Verify "ACCOUNT DELETED!" is visible in "home_page"
     When Click on "Continue" link from "home_page"
 
+  @task2
   Scenario:  Login User with correct email and password
     #Home Page
     Given Browser launch

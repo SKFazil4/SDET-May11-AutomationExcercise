@@ -1,3 +1,4 @@
+import pytest
 from pytest_bdd import given, when, then, parsers, scenarios
 from _pytest.fixtures import FixtureRequest
 from pages.home_page import Home
@@ -48,19 +49,33 @@ def enter_signup_name_value(login_page:Login, user_name:str):
 def enter_signup_email_value(login_page:Login, user_email:str):
     login_page.enter_signup_email(user_email)
 
+@given(parsers.parse('Login email "{user_email}"'))
+def enter_login_email_value(login_page:Login, user_email:str):
+    login_page.enter_login_email(user_email)
+
+@given(parsers.parse('Login password "{user_password}"'))
+def enter_login_password_value(login_page:Login, user_password:str):
+    login_page.enter_login_password(user_password)
+
 # SignUp Page
 
 @given(parsers.parse('Check on title whose value "{title_val}"'))
 def check_on_title_name(signup_page:SignUp, title_val:str):
     signup_page.click_radio_btn_by_value(title_val)
 
-@given(parsers.parse('Fill "{text_data}" in the element id "{element_id}"'))
-def fill_text_data_in_element(signup_page:SignUp, text_data:str, element_id:str):
-    signup_page.fill_data_input_text_by_id(element_id, text_data)
+@given("Fill the following fields")
+def fill_text_data_in_element(signup_page:SignUp, datatable:list):
+    for row in datatable:
+        element_id = row[0]
+        value = row[1]
+        signup_page.fill_data_input_text_by_id(element_id, value)
 
-@given(parsers.parse('Select from select id "{select_id}" with option value "{label_value}"'))
-def select_option_using_id_and_value(signup_page:SignUp, select_id:str, label_value:str):
-    signup_page.select_option_by_id(select_id, label_value)
+@given("Select the following fields")
+def select_option_using_id_and_value(signup_page:SignUp, datatable:list):
+    for row in datatable:
+        element_id = row[0]
+        value = row[1]
+        signup_page.select_option_by_id(element_id, value)
 
 @given(parsers.parse('Checkbox with checkbox id "{checkbox_id}"'))
 def check_checkbox_by_its_id(signup_page:SignUp, checkbox_id:str):
@@ -136,6 +151,15 @@ def verify_product_is_present(checkout_page:Checkout):
 @given(parsers.parse('Enter description in comment text area "{description}"'))
 def enter_description_in_comment(checkout_page:Checkout,description:str):
     checkout_page.fill_comment_description(description)
+
+@then("Validate the total price of each products based on their quantity")
+def validate_total_price_for_each_product(checkout_page:Checkout, context:dict):
+    context["products_total_price"] = checkout_page.validate_total_price_per_product()
+
+@then("Validate the total amount of all the products")
+def validate_total_price_of_all_products(checkout_page:Checkout, context:dict):
+    products_total_price = context["products_total_price"]
+    checkout_page.validate_total_products_amount(products_total_price)
 
 #Payment Page
 @given(parsers.parse('Enter payment details "{input_data}" using "{data_id}"'))

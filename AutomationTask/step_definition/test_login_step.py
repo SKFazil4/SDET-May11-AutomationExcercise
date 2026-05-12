@@ -45,13 +45,20 @@ def when_click_on_button(request:FixtureRequest, page_name:str, btn_name:str):
 def check_on_title_name(signup_page:SignUp, title_val:str):
     signup_page.click_radio_btn_by_value(title_val)
 
-@given(parsers.parse('Fill "{text_data}" in the element id "{element_id}"'))
-def fill_text_data_in_element(signup_page:SignUp, text_data:str, element_id:str):
-    signup_page.fill_data_input_text_by_id(element_id, text_data)
+@given("Fill the following fields")
+def fill_text_data_in_element(signup_page:SignUp, datatable:list):
+    for row in datatable:
+        element_id = row[0]
+        value = row[1]
+        signup_page.fill_data_input_text_by_id(element_id, value)
 
-@given(parsers.parse('Select from select id "{select_id}" with option value "{label_value}"'))
-def select_option_using_id_and_value(signup_page:SignUp, select_id:str, label_value:str):
-    signup_page.select_option_by_id(select_id, label_value)
+@given("Select the following fields")
+def select_option_using_id_and_value(signup_page:SignUp, datatable:list):
+    for row in datatable:
+        element_id = row[0]
+        value = row[1]
+        signup_page.select_option_by_id(element_id, value)
+
 
 @given(parsers.parse('Checkbox with checkbox id "{checkbox_id}"'))
 def check_checkbox_by_its_id(signup_page:SignUp, checkbox_id:str):
